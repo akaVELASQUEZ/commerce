@@ -1,0 +1,156 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if not listing.status %}
+        <div class="status_alert">
+            <div>
+                <h2>
+                    Closed Listing
+                </h2>
+            </div>
+            <div>
+                <h2>
+                    {{ listing.highest_bidder }} gets the item at a price of ${{ listing.current_bid|floatformat:2 }}
+                </h2>
+            </div>
+        </div>
+    {% endif %}
+    <div class="watchlist_div">
+        {% if sign_in%}
+            {% if not sign_op %}
+                <form action="{% url 'watchlist' listing.id %}" method="post" >
+                {% csrf_token %}
+                {% if not watchlist_status %}
+                    <button id="watchlist_button" class="btn btn-primary" name="watchlist" type="submit" value="True">Add to Watchlist</button>
+                {% else %}
+                    <button id="watchlist_button" class="btn btn-danger" name="watchlist" type="submit" value="False">Remove to Watchlist</button>
+                {% endif %}
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="listing_profile">
+        {% if listing.img %}
+            <img id="profile_img" src="{{ listing.img }}" onerror='this.src="/static/images/placeholder.png";'>
+        {% endif %}
+        <div class="profile_details">
+            <div class="name_price">
+                <h3>
+                    <strong>{{ listing.name }}</strong>
+                </h3>
+                <h4>
+                    <strong>${{ listing.current_bid|floatformat:2 }}</strong>
+                </h4>
+            </div>
+            <ul class="others">
+                <li>Listed by: {{ listing.user_id.username }}</li>
+                <li>Name: {{ listing.name }}</li>
+                <li>Category: {{ listing.category }}</li>
+                <li>Date Listed: {{ listing.date }}</li>
+                <li>Starting Price: ${{ listing.min_bid|floatformat:2 }}</li>
+            </ul>
+            <div class="accordion description" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_description" aria-expanded="false" aria-controls="collapse_description">                      Description
+                    </button>
+                  </h2>
+                  <div id="collapse_description" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        {{ listing.description|linebreaks }}
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="bid_container">
+        {% if listing.status %}
+            {% if sign_in %}
+                {% if sign_op %}
+                    <div class="close_form">
+                        <form action="{% url 'listing' listing.id %}" method="post" >
+                            {% csrf_token %}
+                            <input id="close_button" class="btn btn-danger" type="submit" name="status" value="Close Listing">
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="bid_form">
+                        <form action="{% url 'bid' listing.id %}" method="post" >
+                            {% csrf_token %}
+                            <div class="row">
+                                <input class="form-control" type="number" name="bid" placeholder="Bid" min="{{ listing.current_bid }}" required>
+                            </div>
+                            <div class="row">
+                                <input styye="width:100%" id="bid_button" class="btn btn-primary" type="submit" value="Place Bid">
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+            <div class="bid_history">
+                {% if listing_bids %}
+                <div class="accordion description" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_bid_history" aria-expanded="false" aria-controls="collapse_bid_history">
+                            Bid History
+                        </button>
+                      </h2>
+                      <div id="collapse_bid_history" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Bid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for bid in listing_bids %}
+                                    <tr>
+                                        <td>{{ bid.user_name }}</td>
+                                        <td>${{ bid.bid|floatformat:2 }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table> 
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                {% endif %} 
+            </div>
+        </div>
+    </div>
+    <div class="comment_section">
+        <h3>Comment Section</h3>
+        {% if listing.status %}
+            {% if sign_in %}
+                <div class="comment_form">
+                    <form action="{% url 'comment' listing.id %}" method="post" >
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea class="form-control" type="text" name="comment" placeholder="Type your comment here" required></textarea>
+                        </div>
+                        <div class="comment_submit">
+                            <input id="comment_button" class="btn btn-primary" type="submit" value="Comment">
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if listing_comments %}
+            <div class="comment_area">
+                {% for comment in listing_comments %}
+                    <div class="user_comment">
+                        <p class="comment_username"><strong>{{ comment.user_name }}</strong></p>
+                        <p class="comment_datetime">{{ comment.date }}</p>
+                        <p class="comment">{{ comment.comment|linebreaks }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+{% endblock %}

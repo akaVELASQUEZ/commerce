@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block body %}
+<h2>Error</h2>
+<div>
+    Bid should be higher than the current price : {{ listing.current_bid}}
+</div>
+<br>
+<div>
+    <li><a href="/listing/{{ listing.id }}"> Back to {{ listing.name }}</a></li>
+</div>
+{% endblock %}

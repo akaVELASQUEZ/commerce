@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="scroll-container">
+        <div class="gridscroll">
+            <a href="/category/0"><img id="category_img" src="\static\images\electronics.jpg"></a>
+            <a href="/category/1"><img id="category_img" src="\static\images\fashion.jpg"></a>
+            <a href="/category/2"><img id="category_img" src="\static\images\home appliance.jpg"></a>
+            <a href="/category/3"><img id="category_img" src="\static\images\sports.jpg"></a>
+            <a href="/category/4"><img id="category_img" src="\static\images\toys.jpg"></a>
+            <a href="/category/5"><img id="category_img" src="\static\images\digital.jpg"></a>
+            <a href="/category/6"><img id="category_img" src="\static\images\food.jpg"></a>
+            <a href="/category/7"><img id="category_img" src="\static\images\stationary.jpg"></a>
+            <a href="/category/8"><img id="category_img" src="\static\images\bags.jpg"></a>
+            <a href="/category/9"><img id="category_img" src="\static\images\books.jpg"></a>
+            <a href="/category/10"><img id="category_img" src="\static\images\vehicle.jpg"></a>
+            <a href="/category/11"><img id="category_img" src="\static\images\others.jpg"></a>
+        </div>
+    </div>
+    <div class="grid_container">
+    {% for listing in listings %}
+        <div class="grid_item"  onclick="location.href='/listing/{{ listing.id }}';">
+            {% if listing.img %}
+                <img id="listing_image"src="{{ listing.img }}" onerror='this.src="/static/images/placeholder.png";'>
+            {% endif %}
+            <ul id="listing_details">
+                <li>Name: <strong>{{ listing.name }}</strong></li>
+                <li>Starting Price: ${{ listing.min_bid|floatformat:2 }}</li>
+                <li>Current Price: ${{ listing.current_bid|floatformat:2 }}</li>
+                <li>Description {{ listing.description|linebreaks }}</li>
+            </ul>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create Listings</h2>
+    <div class="create">
+        <form action="{% url 'create' %}" method="post">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <label for="list_name" class="col-sm-2 col-form-label">Listing Name:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="_name" class="form-control" id="list_name" placeholder="Listing Name" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="list_img" class="col-sm-2 col-form-label">Image URL:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="_img" class="form-control" id="list_img" placeholder="Image URL">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="list_price" class="col-sm-2 col-form-label">Minimum Bid:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="_min" class="form-control" id="list_price" placeholder="Minimum Bid" min="0" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="list_category" class="col-sm-2 col-form-label">Category:</label>
+                <div class="col-sm-10">
+                    <select name="_category" class="form-control" id="list_category" required>
+                        {% for key, value in fusion %}
+                            <option value="{{ key }}">{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="list_description" class="col-sm-2 col-form-label">Description:</label>
+                <div class="col-sm-10">
+                <textarea rows="10" type="text" name="_description" class="form-control" id="list_description" placeholder="Description"></textarea>
+                </div>
+            </div>
+            <button style="width:100%;" type="submit" class="btn btn-primary">Create Listing</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Closed Listings</h2>
+    <div class="grid_container">
+    {% for listing in listings %}
+        <div class="grid_item"  onclick="location.href='/listing/{{ listing.id }}';">
+            {% if listing.img %}
+                <img id="listing_image"src="{{ listing.img }}" onerror='this.src="/static/images/placeholder.png";'>
+            {% endif %}
+            <ul id="listing_details">
+                <li>Name: <strong>{{ listing.name }}</strong></li>
+                <li>Starting Price: ${{ listing.min_bid|floatformat:2 }}</li>
+                <li>Current Price: ${{ listing.current_bid|floatformat:2 }}</li>
+                <li>Description {{ listing.description|linebreaks }}</li>
+            </ul>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
