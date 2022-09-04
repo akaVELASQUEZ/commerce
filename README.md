@@ -1,4 +1,4 @@
-# REEsched
+# Auctions
 #### Video Demo:  N/A yet
 #### Description: A commerce web application made using Pythons Django Framework.
 #
